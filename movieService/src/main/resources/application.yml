@@ -1,27 +1,28 @@
 server:
-  port: 0
+  port: 8082
 
 spring:
   application:
     name: movieService
-  # PostgreSql Properties
+
   datasource:
-    username: 'postgres'
-    url: jdbc:postgresql://localhost:5432/cine_vision
-    password: '12345'
+    url: jdbc:postgresql://postgres:5432/cine_vision
+    username: postgres
+    password: 12345
     driver-class-name: org.postgresql.Driver
+
   jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: 'true'
+        format_sql: true
     hibernate:
       ddl-auto: update
-    show-sql: 'true'
-  # Apache Kafka Producer Properties
+    show-sql: true
+
   kafka:
     producer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: kafka:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
@@ -31,35 +32,35 @@ spring:
               mapping: event:com.kaankaplan.movieService.entity.dto.EmailMessageKafkaDto
     topic:
       name: email_topics
-  # Zipkin Properties
+
   zipkin:
-    base-url: http://localhost:9411
-  # Sleuth Properties
+    base-url: http://zipkin:9411
+
   sleuth:
     sampler:
       probability: 1.0
-# Eureka Properties
+
 eureka:
   client:
     service-url:
-      defaultZone: http://eureka:password@localhost:8761/eureka
+      defaultZone: http://eureka:8761/eureka
     fetch-registry: true
     register-with-eureka: true
 
-# Circuit Breaker Properties
 management:
+  server:
+    port: 8082
   health:
     circuitbreakers:
       enabled: true
   endpoints:
     web:
       exposure:
-        include: '*'
+        include: "*"
   endpoint:
     health:
       show-details: always
-  server:
-    port: 8000
+
 resilience4j:
   circuitbreaker:
     instances:
